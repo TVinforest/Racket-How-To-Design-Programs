@@ -172,5 +172,5 @@
 ;;remove string at i position of another string
 (define (exclude-1string str i)
   (cond
-    [(>= 0]
+    [(>= 0])))))
 
