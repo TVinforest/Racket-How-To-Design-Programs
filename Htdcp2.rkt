@@ -171,6 +171,8 @@
 
 ;;remove string at i position of another string
 (define (exclude-1string str i)
-  (cond
-    [(>= 0])))))
+  (if (and (>= i 0) (= (- (string-length str) 1) i))
+  (string-append (substring str 0 (- i 1)) (substring str i))
+  ""))
+
 
