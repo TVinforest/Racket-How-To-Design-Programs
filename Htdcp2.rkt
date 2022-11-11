@@ -1,8 +1,11 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
 #reader(lib "htdp-beginner-reader.ss" "lang")((modname Htdcp2) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+
 (require 2htdp/universe) 
 (require 2htdp/image)
+(require 2htdp/batch-io)
+
 
 (define (y x) (* x x))
 
@@ -152,9 +155,7 @@
    (* 6 (x-to-power side 2)))
 
 
-;;test ff
-(define (ff a)
-  (* 10 a))
+
 
 ;;image classify by w d ratio
 (define (image-class image)
@@ -176,3 +177,107 @@
   ""))
 
 
+;;letter opening
+(define (opening first-name last-name)
+  (string-append "Dear, " first-name))
+
+;;test ff
+(define (ff a)
+  (* 10 a))
+
+
+;;akermann function
+(define (Akermann x y)
+  (cond ((= y 0) 0)
+        ((= x 0) (* 2 y))
+        ((= y 1) 2)
+        (else (Akermann (- x 1) (Akermann x (- y 1))))))
+
+;;LETTER-BATCH
+
+(define (letter first-name last-name signature)
+  (string-append
+   (beginning first-name)
+   "\n\n"
+   (body first-name last-name)
+   "\n"
+   (closure signature)))
+
+(define (beginning first-name)
+  (string-append "Dear " first-name ", "))
+
+(define (body first-name last-name)
+  (string-append
+   "We have discovered that all people with the" "\n" 
+   "last name " last-name " have won our lottery. So, " "\n"
+   first-name ", " "hurry and pick up your prize."))
+
+(define (closure signature-name)
+  (string-append
+   "\n\n"
+   "Sincerely,"
+   "\n\n"
+   signature-name
+   "\n"))
+
+;;BEST PRICE FOR MOVIE
+
+;;constant base cost to run a show
+(define CONST-COST 180.0)
+
+;;capita grow per price step
+(define CAPITA-GROW 15.0)
+
+;;price step
+(define PRICE-STEP 0.1)
+
+;;base attendance
+(define BASE-ATTENDANCE 120.0)
+
+;;base price
+(define BASE-PRICE 5.0)
+
+;;base cost of show for one attendee
+(define BASE-COST 0.04)
+
+
+;;change in attendance per step in price
+(define CAPITA-PER-STEP (/ CAPITA-GROW PRICE-STEP))
+
+
+;;attendies number based on ticket price
+(define (attendees ticket-price)
+  (round
+  (- 120 (* (- ticket-price 5.0) CAPITA-PER-STEP))))
+
+;;revenue of the movie theatre
+(define (revenue ticket-price)
+  (* ticket-price (attendees ticket-price)))
+
+;;cost per show
+(define (cost ticket-price)
+  (+ 180 (* BASE-COST (attendees ticket-price))))
+
+;;profit per show
+(define (profit ticket-price)
+  (cond
+    ((<= (attendees ticket-price) 0) (error-message "at this price there will be no attendees"))
+    (else (- (revenue ticket-price) (cost ticket-price)))))
+
+;;movies data per show based on ticket cost
+(define (movie-show-data ticket-price)
+(error-message  (string-append
+                 "profit: " (number->string (exact->inexact (profit ticket-price))) "\n"
+                 "attendees: " (number->string (exact->inexact (attendees ticket-price))) "\n"
+                 "cost: " (number->string (exact->inexact (cost ticket-price))) "\n"
+                 "revenue: " (number->string (exact->inexact (revenue ticket-price))))))
+
+;;ERROR-MESSAGE
+(define (error-message string) 
+(write-file 'stdout (string-append "\n" string " ")))
+
+
+
+;;BIG BANG
+(define (number->square s)
+  (square s "solid" "red"))
