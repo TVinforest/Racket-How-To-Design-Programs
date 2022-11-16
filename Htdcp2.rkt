@@ -278,6 +278,60 @@
 
 
 
+
+;;CONVERSION
+
+;;farengheit to celcius 
+(define (C f)
+  (* 5/9 (- f 32)))
+
+;;celcius to farengheit
+(define (F c)
+  (+(* 9/5  c) 32))
+
+;;Convert values sepecified in one file into diff format and write to out file
+(define (convert-in-out in out)
+  (write-file out
+    (string-append
+     (number->string
+      (C
+       (string->number
+        (read-file in))))
+     "\n")))
+
+;;fill letter template with strings from files
+(define (main-letter in-fst in-lst in-sign out)
+  (write-file out
+              (letter
+               (read-file in-fst)
+               (read-file in-lst)
+               (read-file in-sign))))
+
+
+
+
+
 ;;BIG BANG
 (define (number->square s)
   (square s "solid" "red"))
+
+(define (reset s ke)
+  (* 2 s))
+
+;;place a dot
+(define BACKGROUND-0 (empty-scene 100 100))
+(define DOT (circle 3 "solid" "red" ))
+
+(define (main y)
+  (big-bang y
+    [on-tick sub1]
+    [stop-when zero?]
+    [to-draw place-dot-at]
+    [on-key stop]))
+
+(define (place-dot-at y)
+  (place-image DOT 50 y BACKGROUND-0))
+
+(define (stop y ke)
+  0)
+
