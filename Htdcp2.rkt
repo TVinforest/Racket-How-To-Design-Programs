@@ -282,11 +282,11 @@
 ;;CONVERSION
 
 ;;farengheit to celcius 
-(define (C f)
+(define (f2c f)
   (* 5/9 (- f 32)))
 
 ;;celcius to farengheit
-(define (F c)
+(define (c2f c)
   (+(* 9/5  c) 32))
 
 ;;Convert values sepecified in one file into diff format and write to out file
@@ -294,7 +294,7 @@
   (write-file out
     (string-append
      (number->string
-      (C
+      (f2c
        (string->number
         (read-file in))))
      "\n")))
@@ -334,4 +334,10 @@
 
 (define (stop y ke)
   0)
+
+;;CHECKS
+(check-expect (f2c -40) -40)
+(check-expect (f2c 32) 0)
+(check-expect (f2c 212) 100)
+
 
