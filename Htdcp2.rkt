@@ -194,7 +194,6 @@
         (else (Akermann (- x 1) (Akermann x (- y 1))))))
 
 ;;LETTER-BATCH
-
 (define (letter first-name last-name signature)
   (string-append
    (beginning first-name)
@@ -322,7 +321,7 @@
 (define BACKGROUND-0 (empty-scene 100 100))
 (define DOT (circle 3 "solid" "red" ))
 
-(define (main y)
+(define (main_0 y)
   (big-bang y
     [on-tick sub1]
     [stop-when zero?]
@@ -336,8 +335,97 @@
   0)
 
 ;;CHECKS
-(check-expect (f2c -40) -40)
-(check-expect (f2c 32) 0)
-(check-expect (f2c 212) 100)
+;(check-expect (f2c -40) -40)
+;(check-expect (f2c 32) 0)
+;(check-expect (f2c 212) 100)
 
+
+
+;;MOVING CAR WORLD
+
+;; WIDTH HEIGHT
+(define WIDTH_0 600)
+
+(define HEIGHT_0 600)
+
+
+;;world
+(define WIDTH-OF-THE-WORLD 200)
+
+;;wheel radius
+(define WHEEL-RADIUS 25)
+
+;;wheel distance
+(define WHEEL-DISTANCE
+  (* WHEEL-RADIUS 5))
+
+;;background
+(define BACKGROUND_1 
+    (rectangle WIDTH_0 HEIGHT_0 "solid" "blue"))
+
+;;CAR
+
+
+;;wheel
+(define WHEEL
+  (underlay (circle WHEEL-RADIUS "solid" "white")
+           (circle (/ WHEEL-RADIUS 2) "solid" "blue")))
+
+;;space
+(define SPACE
+  (rectangle WHEEL-DISTANCE 1 "solid" "black"))
+
+;;two wheels placed beside each other  
+(define BOTH-WHEELS
+  (beside WHEEL SPACE WHEEL))
+
+;;car hull
+(define CAR-HULL
+  (above (beside (rectangle (* 5 WHEEL-RADIUS) (* 2 WHEEL-RADIUS) 'solid 'blue) (right-triangle (* 5 WHEEL-RADIUS) (* 2 WHEEL-RADIUS) 'solid 'red)) 
+          (rectangle (* 10 WHEEL-RADIUS) (* 2 WHEEL-RADIUS) 'solid 'blue)))
+
+;;car
+(define CAR
+  (underlay/offset CAR-HULL 0 (* WHEEL-RADIUS 2) BOTH-WHEELS ))
+
+
+
+
+
+; WorldState -> Image
+; places the image of the car x pixels from 
+; the left margin of the BACKGROUND image 
+(define (render_0 x)
+  BACKGROUND_1)
+
+; WorldState -> WorldState 
+; moves the car by 3 pixels for every clock tick
+; examples: 
+;   given: 20, expect 23
+;   given: 78, expect 81
+(define (tock cw)
+  (+ cw 3)) 
+
+
+
+
+
+
+
+
+
+;;MINE
+
+;;
+(define (draw-well depth)
+  (cond
+    ( (= 0 depth) (place-image (radial-star 10 10 3 'outline 'black) (/ WIDTH_0 2) (/ HEIGHT_0 2) BACKGROUND_1))
+    ( else (overlay (radial-star (* depth 10) 10 9 'outline 'black) (draw-well (- depth 1))))))
+
+;;GRid spawner
+
+;(define (grid-spawn x y cell)
+ ; (cond
+  ;  ((= i 0) (overlay/offset cell (mod (* x y) x) (/ (* x y) y) cell)
+   ; (else ())))
 
