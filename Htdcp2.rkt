@@ -371,9 +371,16 @@
   (above (beside (rectangle (* 5 WHEEL-RADIUS) (* 2 WHEEL-RADIUS) 'solid 'blue) (right-triangle (* 5 WHEEL-RADIUS) (* 2 WHEEL-RADIUS) 'solid 'red)) 
           (rectangle (* 10 WHEEL-RADIUS) (* 2 WHEEL-RADIUS) 'solid 'blue)))
 
+(define CAR-HULL_1
+  (above (beside (rectangle (* 5 WHEEL-RADIUS) (* 2 WHEEL-RADIUS) 'solid 'blue) (right-triangle (* 5 WHEEL-RADIUS) (* 2 WHEEL-RADIUS) 'solid 'white)) 
+          (rectangle (* 10 WHEEL-RADIUS) (* 2 WHEEL-RADIUS) 'solid 'blue)))
+
 ;;car
 (define CAR
   (underlay/offset CAR-HULL 0 (* WHEEL-RADIUS 2) BOTH-WHEELS ))
+
+(define CAR_1
+  (underlay/offset CAR-HULL_1 0 (* WHEEL-RADIUS 2) BOTH-WHEELS ))
 
 
 ;;tree
@@ -404,49 +411,56 @@
 (define BACKGROUND_1 
     (rectangle WIDTH-OF-THE-WORLD HEIGHT_0 "solid" "black"))
 
-; WorldState -> Image
-; places the car into the BACKGROUND scene,
-; according to the given world state 
- (define (render cw)
-   (place-images
-     (list
-      CAR 
-      TREE
-      TREE
-      TREE)
-      (list
-       (make-posn cw Y-CAR)
-       (make-posn 60 Y-CAR)
-       (make-posn 40 Y-CAR)
-       (make-posn 100 Y-CAR))
-      BACKGROUND_1))
+
 
 
 ; WorldState -> WorldState 
-; moves the car by 3 pixels for every clock tick
+; moves the car by 1 pixels for every clock tick
 ; examples: 
 ;   given: 20, expect 23
 ;   given: 78, expect 81
 (define (tock cw)
-  (+ cw 3)) 
+     (if (check-edge cw) (- (/ (image-width CAR) 2)) (+ cw 5))) 
 
 
 ;stop test
 (define (stop-test cw)
-  (if (> cw (+ WIDTH-OF-THE-WORLD (/ (image-width CAR) 2 ))) #t #f))
+  (if (> cw (- WIDTH-OF-THE-WORLD (/ (image-width CAR) 2 ))) #t #f))
+
+
+;;MOUSE HANDLING
+
+; WorldState Number Number String -> WorldState
+; places the car at x-mouse
+; if the given me is "button-down" 
+(define (hyper cw x-mouse y-mouse me)
+  (cond
+    [(string=? "button-down" me) x-mouse]
+    [else cw]))
+
+
+
+; WorldState -> Image
+; places the car into the BACKGROUND scene,
+; according to the given world state 
+ (define (render cw)
+   (place-image
+       (if (= (modulo cw 100) 0) CAR  CAR_1)
+       cw Y-CAR BACKGROUND_1))
+
+;;check if car(image) reaches the end and warp it to beggining
+(define (check-edge cw)
+   (if (> cw (+ WIDTH-OF-THE-WORLD (/ (image-width CAR) 2))) #t #f))
+
 
 ;bang main
 (define (main_car cw)
   (big-bang cw
     [on-tick tock]
-    [stop-when stop-test]
-    [to-draw render ]
+    [on-mouse hyper]
+   ;[stop-when stop-test]
+    [to-draw render]
     [on-key stop]))
-
-
-
-;;MOUSE HANDLING for
-
 
 
 
@@ -472,4 +486,4 @@
     ((= 1 y)  (grid-spawn x cell))
     (else (above (grid-spawn x cell) (grid-main x (- y 1) cell) ))))
 
-(define GRID-CELL 10)
+(define GRID-CELL 10)x
