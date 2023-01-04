@@ -486,4 +486,13 @@
     ((= 1 y)  (grid-spawn x cell))
     (else (above (grid-spawn x cell) (grid-main x (- y 1) cell) ))))
 
-(define GRID-CELL 10)x
+(define GRID-CELL 10)
+
+(define (sumN n)
+  (cond
+    ((= 0 n) 0)
+    (else (+ n (sumN (- n 1))))))
+
+
+;;HAPPINES GAUGE
+
