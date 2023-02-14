@@ -65,39 +65,8 @@
 (sqrt (+(sqr y)(sqr x))))
 
 
-;;STRINGS
 
-;;prefix suffix
-(define prefix "hello")
-(define suffix "world")
-
-(define string-test "helloworld")
-(define i 5)
-
-;;insert string at i position of another string
-(define (insert-string str stri i )
-  (string-append (substring str 0 i) stri (substring str i)))
-
-;;remove character fomr i position of a string
-(define (remove-1string str i )
-  (string-append (substring str 0 (- i 1)) (substring str i)))
-
-
-;;get first 1string from non empty string 
-(define (first-1string str)
-  (cond
-    [(equal? str "") ""]
-    [else (substring str 1)]))
-
-
-;;get last 1string from non empty string 
-(define (last-1string str)
-  (cond
-    [(equal? str "") ""]
-    [else (substring str (- (string-length str) 1))]))
-
-
-
+  
 ;;BOOLEAN
 (define sunny #true)
 (define friday #false)
@@ -494,5 +463,7 @@
     (else (+ n (sumN (- n 1))))))
 
 
-;;HAPPINES GAUGE
+;;HAPPINES GAUGE - separate file
+
+
 
